@@ -14,6 +14,14 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
 
+import info.metadude.java.library.overpass.ApiModule;
+import info.metadude.java.library.overpass.models.Element;
+import info.metadude.java.library.overpass.models.OverpassResponse;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
+import retrofit.Retrofit;
+
 public class MapsActivity extends Activity implements OnMapReadyCallback,
         GoogleMap.OnMapLongClickListener {
 
@@ -32,6 +40,25 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
 
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
+
+        final Call<OverpassResponse> overpassResponse = ApiModule.provideOverpassService().getOverpassResponse("[out:json];node(around:600,52.516667,13.383333)[\"amenity\"=\"post_box\"];out;");
+
+        overpassResponse.enqueue(new Callback<OverpassResponse>() {
+            @Override
+            public void onResponse(Response<OverpassResponse> response, Retrofit retrofit) {
+                for (Element element : response.body().elements) {
+                    LatLng pos = new LatLng(element.lat,element.lon);
+                    mMap.addMarker(new MarkerOptions().position(pos).title("Marker in Sydney"));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                mDismissOverlay.setIntroText("no results found");
+                mDismissOverlay.show();
+            }
+        });
 
         // Set the layout. It only contains a MapFragment and a DismissOverlay.
         setContentView(R.layout.activity_maps);
@@ -76,16 +103,8 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        // Map is ready to be used.
         mMap = googleMap;
-
-        // Set the long click listener as a way to exit the map.
         mMap.setOnMapLongClickListener(this);
-
-        // Add a marker in Sydney, Australia and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     @Override
