@@ -23,3 +23,10 @@
  ```
  
  NOTE: when releasing the app you also need to do this for the release-key
+ 
+# Used libraries
+ 
+  * https://github.com/johnjohndoe/Overpass
+  * https://github.com/JakeWharton/butterknife
+  * https://github.com/ligi/AXT
+  * and the Android support stuff
