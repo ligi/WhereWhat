@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
 
+import java.util.List;
+
 import info.metadude.java.library.overpass.ApiModule;
 import info.metadude.java.library.overpass.models.Element;
 import info.metadude.java.library.overpass.models.OverpassResponse;
@@ -26,17 +28,7 @@ import retrofit.Retrofit;
 public class MapsActivity extends Activity implements OnMapReadyCallback,
         GoogleMap.OnMapLongClickListener {
 
-    /**
-     * Overlay that shows a short help text when first launched. It also provides an option to
-     * exit the app.
-     */
     private DismissOverlayView mDismissOverlay;
-
-    /**
-     * The map. It is initialized when the map has been fully loaded and is ready to be used.
-     *
-     * @see #onMapReady(com.google.android.gms.maps.GoogleMap)
-     */
     private GoogleMap mMap;
 
     public void onCreate(Bundle savedState) {
@@ -47,23 +39,16 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         overpassResponse.enqueue(new Callback<OverpassResponse>() {
             @Override
             public void onResponse(Response<OverpassResponse> response, Retrofit retrofit) {
-
-                final LatLngBounds.Builder builder = LatLngBounds.builder();
-                for (Element element : response.body().elements) {
-                    final LatLng pos = new LatLng(element.lat,element.lon);
-                    builder.include(pos);
-                    mMap.addMarker(new MarkerOptions().position(pos).title("Marker in Sydney"));
-
+                if (response.isSuccess()) {
+                    addMarkersFromResponse(response);
+                } else {
+                    handleMarkerGetFail();
                 }
-                final LatLngBounds latLngBounds = builder.build();
-
-                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,100));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                mDismissOverlay.setIntroText("no results found");
-                mDismissOverlay.show();
+                handleMarkerGetFail();
             }
         });
 
@@ -106,6 +91,26 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         MapFragment mapFragment =
                 (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    private void handleMarkerGetFail() {
+        mDismissOverlay.setIntroText("no results found");
+        mDismissOverlay.show();
+    }
+
+    private void addMarkersFromResponse(Response<OverpassResponse> response) {
+        final LatLngBounds.Builder latLngBuilder = LatLngBounds.builder();
+
+        final List<Element> elements = response.body().elements;
+        for (Element element : elements) {
+            final LatLng pos = new LatLng(element.lat,element.lon);
+            latLngBuilder.include(pos);
+            mMap.addMarker(new MarkerOptions().position(pos).title("title"));
+
+        }
+        final LatLngBounds latLngBounds = latLngBuilder.build();
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,100));
     }
 
     @Override
