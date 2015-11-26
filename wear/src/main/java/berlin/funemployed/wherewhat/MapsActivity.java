@@ -1,5 +1,12 @@
 package berlin.funemployed.wherewhat;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.wearable.view.DismissOverlayView;
+import android.view.View;
+import android.view.WindowInsets;
+import android.widget.FrameLayout;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -7,13 +14,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.wearable.view.DismissOverlayView;
-import android.view.View;
-import android.view.WindowInsets;
-import android.widget.FrameLayout;
 
 import java.util.List;
 
@@ -33,24 +33,6 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
 
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-
-        final Call<OverpassResponse> overpassResponse = ApiModule.provideOverpassService().getOverpassResponse("[out:json];node(around:600,52.516667,13.383333)[\"amenity\"=\"post_box\"];out;");
-
-        overpassResponse.enqueue(new Callback<OverpassResponse>() {
-            @Override
-            public void onResponse(Response<OverpassResponse> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
-                    addMarkersFromResponse(response);
-                } else {
-                    handleMarkerGetFail();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                handleMarkerGetFail();
-            }
-        });
 
         // Set the layout. It only contains a MapFragment and a DismissOverlay.
         setContentView(R.layout.activity_maps);
@@ -88,8 +70,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         //mDismissOverlay.show();
 
         // Obtain the MapFragment and set the async listener to be notified when the map is ready.
-        MapFragment mapFragment =
-                (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
@@ -103,20 +84,39 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
 
         final List<Element> elements = response.body().elements;
         for (Element element : elements) {
-            final LatLng pos = new LatLng(element.lat,element.lon);
+            final LatLng pos = new LatLng(element.lat, element.lon);
             latLngBuilder.include(pos);
             mMap.addMarker(new MarkerOptions().position(pos).title("title"));
 
         }
         final LatLngBounds latLngBounds = latLngBuilder.build();
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,100));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setOnMapLongClickListener(this);
+
+        final Call<OverpassResponse> overpassResponse = ApiModule.provideOverpassService().getOverpassResponse("[out:json];node(around:600,52.516667,13.383333)[\"amenity\"=\"post_box\"];out;");
+
+        overpassResponse.enqueue(new Callback<OverpassResponse>() {
+            @Override
+            public void onResponse(Response<OverpassResponse> response, Retrofit retrofit) {
+                if (response.isSuccess()) {
+                    addMarkersFromResponse(response);
+                } else {
+                    handleMarkerGetFail();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                handleMarkerGetFail();
+            }
+        });
+
     }
 
     @Override
