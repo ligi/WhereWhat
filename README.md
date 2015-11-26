@@ -19,7 +19,7 @@
  now you can build the project 
  
  ```
-  ./gradlew clenan build
+  ./gradlew clean build
  ```
  
  NOTE: when releasing the app you also need to do this for the release-key
