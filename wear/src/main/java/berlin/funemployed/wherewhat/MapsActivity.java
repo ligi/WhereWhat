@@ -86,7 +86,8 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         for (Element element : elements) {
             final LatLng pos = new LatLng(element.lat, element.lon);
             latLngBuilder.include(pos);
-            mMap.addMarker(new MarkerOptions().position(pos).title("title"));
+            final String fallback = TitleFromTagExtractor.getTitleFromTagMap(element.tags, "fallback");
+            mMap.addMarker(new MarkerOptions().position(pos).title(fallback));
 
         }
         final LatLngBounds latLngBounds = latLngBuilder.build();

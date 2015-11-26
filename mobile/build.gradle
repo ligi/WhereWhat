@@ -13,6 +13,18 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+     // needed for assertJ
+    packagingOptions {
+        // needed for assertJ
+        exclude 'asm-license.txt'
+        exclude 'LICENSE'
+        exclude 'NOTICE'
+
+        // hack for instrumentation testing :-(
+        exclude 'LICENSE.txt'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
