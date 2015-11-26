@@ -30,3 +30,7 @@
   * https://github.com/JakeWharton/butterknife
   * https://github.com/ligi/AXT
   * and the Android support stuff
+  
+# Licence 
+
+GPLv3
