@@ -5,6 +5,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.app.Activity;
@@ -46,11 +47,17 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         overpassResponse.enqueue(new Callback<OverpassResponse>() {
             @Override
             public void onResponse(Response<OverpassResponse> response, Retrofit retrofit) {
+
+                final LatLngBounds.Builder builder = LatLngBounds.builder();
                 for (Element element : response.body().elements) {
-                    LatLng pos = new LatLng(element.lat,element.lon);
+                    final LatLng pos = new LatLng(element.lat,element.lon);
+                    builder.include(pos);
                     mMap.addMarker(new MarkerOptions().position(pos).title("Marker in Sydney"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+
                 }
+                final LatLngBounds latLngBounds = builder.build();
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,100));
             }
 
             @Override
@@ -93,7 +100,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         // Obtain the DismissOverlayView and display the introductory help text.
         mDismissOverlay = (DismissOverlayView) findViewById(R.id.dismiss_overlay);
         mDismissOverlay.setIntroText(R.string.intro_text);
-        mDismissOverlay.show();
+        //mDismissOverlay.show();
 
         // Obtain the MapFragment and set the async listener to be notified when the map is ready.
         MapFragment mapFragment =
