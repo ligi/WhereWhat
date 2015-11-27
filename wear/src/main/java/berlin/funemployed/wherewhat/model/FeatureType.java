@@ -3,8 +3,12 @@ package berlin.funemployed.wherewhat.model;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class FeatureType {
-    public final String osm_tag;
+
+    public final Map<String, String> osmTags;
 
     @DrawableRes
     public final int drawableRes;
@@ -12,9 +16,16 @@ public class FeatureType {
     @StringRes
     public final int descriptionRes;
 
-    public FeatureType(String osm_tag, int drawableRes, int descriptionRes) {
-        this.osm_tag = osm_tag;
+    public FeatureType(Map<String, String> osmTags, int drawableRes, int descriptionRes) {
+        this.osmTags = osmTags;
         this.drawableRes = drawableRes;
         this.descriptionRes = descriptionRes;
     }
+
+    public FeatureType(final String amenityTagValue, int drawableRes, int descriptionRes) {
+        this(new HashMap<String, String>() {{
+            put("amenity", amenityTagValue);
+        }}, drawableRes, descriptionRes);
+    }
+
 }

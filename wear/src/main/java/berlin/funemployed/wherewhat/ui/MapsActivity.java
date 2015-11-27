@@ -156,13 +156,8 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         mMap = googleMap;
         mMap.setOnMapLongClickListener(this);
 
-        final String tagValue = userContext.currentFeatureType.osm_tag;
-        Map<String, String> tags =  new HashMap<String, String>() {
-            {
-                put("amenity", tagValue);
-            }
-        };
-        DataQuery dataQuery = new DataQuery(3600, 52.516667, 13.383333, tags, true, 13);
+        Map<String, String> osmTags = userContext.currentFeatureType.osmTags;
+        DataQuery dataQuery = new DataQuery(3600, 52.516667, 13.383333, osmTags, true, 13);
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
         List<Interceptor> interceptors = new ArrayList<>(1);
