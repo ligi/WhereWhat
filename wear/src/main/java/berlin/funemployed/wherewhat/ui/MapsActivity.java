@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.wearable.view.DismissOverlayView;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
@@ -150,12 +151,14 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
                 if (response.isSuccess()) {
                     addMarkersFromResponse(response);
                 } else {
+                    Log.e(getClass().getName(), response.errorBody().toString());
                     handleMarkerGetFail();
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
+                Log.e(getClass().getName(), t.getMessage());
                 handleMarkerGetFail();
             }
         });
