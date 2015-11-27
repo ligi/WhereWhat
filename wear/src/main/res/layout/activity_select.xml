@@ -7,9 +7,9 @@
     android:layout_height="match_parent"
     tools:context="berlin.funemployed.wherewhat.MapsActivity">
 
-    <Button
-        android:id="@+id/button_post_box"
-        android:text="POSTBOX"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

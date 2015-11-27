@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">WhereWhat</string>
     <string name="intro_text">Long click to exit the map.</string>
+    <string name="mailbox" >MailBox</string>
+    <string name="bikeparking">bike parking</string>
+    <string name="bus">bus</string>
+    <string name="train">train</string>
+    <string name="trash">trash</string>
 </resources>
