@@ -59,7 +59,8 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
     @OnClick(R.id.navigate_to_button)
     void navigateTo() {
         try {
-            String uri = "google.navigation:q=" + String.valueOf(currentSelectedMarker.getPosition().latitude) + "," + String.valueOf(currentSelectedMarker.getPosition().longitude);
+            final Element currentSelectedElement = userContext.currentSelectedElement;
+            String uri = "google.navigation:q=" + String.valueOf(currentSelectedElement.lat) + "," + String.valueOf(currentSelectedElement.lon);
             Intent mapsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
             mapsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(mapsIntent);
@@ -74,7 +75,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
     @Inject
     UserContext userContext;
 
-    private Marker currentSelectedMarker;
+    private Map<Marker,Element> markerToElementMap = new HashMap<>();
 
     private GoogleMap mMap;
 
@@ -123,12 +124,17 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
             Toast.makeText(this,"nothing found",Toast.LENGTH_LONG).show();
             return;
         }
+
+        markerToElementMap.clear();
+
         for (Element element : elements) {
+
             final LatLng pos = new LatLng(element.lat, element.lon);
             latLngBuilder.include(pos);
             final String fallback = TitleFromTagExtractor.getTitleFromTagMap(element.tags, "fallback");
-            mMap.addMarker(new MarkerOptions().position(pos).title(fallback));
+            final Marker marker = mMap.addMarker(new MarkerOptions().position(pos).title(fallback));
 
+            markerToElementMap.put(marker,element);
         }
 
         final LatLngBounds latLngBounds = latLngBuilder.build();
@@ -138,7 +144,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                currentSelectedMarker = marker;
+                userContext.currentSelectedElement = markerToElementMap.get(marker);
                 navigateToButton.setVisibility(View.VISIBLE);
                 return false;
             }

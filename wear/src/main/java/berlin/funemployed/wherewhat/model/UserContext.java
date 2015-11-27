@@ -1,8 +1,8 @@
 package berlin.funemployed.wherewhat.model;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
+import info.metadude.java.library.overpass.models.Element;
 
 public class UserContext {
     public FeatureType currentFeatureType;
+    public Element currentSelectedElement;
 }
