@@ -5,7 +5,7 @@ import android.app.Application;
 import berlin.funemployed.wherewhat.dependencygraph.DaggerMainComponent;
 import berlin.funemployed.wherewhat.dependencygraph.MainComponent;
 
-public class App extends Application{
+public class App extends Application {
 
     private static MainComponent component;
 
