@@ -1,11 +1,15 @@
 package berlin.funemployed.wherewhat;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.wearable.view.DismissOverlayView;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,10 +17,14 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import info.metadude.java.library.overpass.ApiModule;
 import info.metadude.java.library.overpass.models.Element;
 import info.metadude.java.library.overpass.models.OverpassResponse;
@@ -28,31 +36,46 @@ import retrofit.Retrofit;
 public class MapsActivity extends Activity implements OnMapReadyCallback,
         GoogleMap.OnMapLongClickListener {
 
+    @Bind(R.id.root_container)
+    FrameLayout topFrameLayout;
+
+    @Bind(R.id.map_container)
+    FrameLayout mapFrameLayout;
+
+    @OnClick(R.id.navigate_to_button)
+    void navigateTo() {
+        try {
+            String uri = "google.navigation:q=" + String.valueOf(currentSelectedMarker.getPosition().latitude) + "," + String.valueOf(currentSelectedMarker.getPosition().longitude);
+            Intent mapsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            mapsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(mapsIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this,"You need to install navigation app",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Bind(R.id.navigate_to_button)
+    View navigateToButton;
+
+    Marker currentSelectedMarker;
     private DismissOverlayView mDismissOverlay;
     private GoogleMap mMap;
 
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
 
-        // Set the layout. It only contains a MapFragment and a DismissOverlay.
         setContentView(R.layout.activity_maps);
 
-        // Retrieve the containers for the root of the layout and the map. Margins will need to be
-        // set on them to account for the system window insets.
-        final FrameLayout topFrameLayout = (FrameLayout) findViewById(R.id.root_container);
-        final FrameLayout mapFrameLayout = (FrameLayout) findViewById(R.id.map_container);
+        ButterKnife.bind(this);
 
-        // Set the system view insets on the containers when they become available.
         topFrameLayout.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
             @Override
             public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
-                // Call through to super implementation and apply insets
                 insets = topFrameLayout.onApplyWindowInsets(insets);
 
                 FrameLayout.LayoutParams params =
                         (FrameLayout.LayoutParams) mapFrameLayout.getLayoutParams();
 
-                // Add Wearable insets to FrameLayout container holding map as margins
                 params.setMargins(
                         insets.getSystemWindowInsetLeft(),
                         insets.getSystemWindowInsetTop(),
@@ -64,12 +87,6 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
             }
         });
 
-        // Obtain the DismissOverlayView and display the introductory help text.
-        mDismissOverlay = (DismissOverlayView) findViewById(R.id.dismiss_overlay);
-        mDismissOverlay.setIntroText(R.string.intro_text);
-        //mDismissOverlay.show();
-
-        // Obtain the MapFragment and set the async listener to be notified when the map is ready.
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
@@ -93,6 +110,15 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         final LatLngBounds latLngBounds = latLngBuilder.build();
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                currentSelectedMarker = marker;
+                navigateToButton.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
     }
 
     @Override
