@@ -19,7 +19,7 @@ import retrofit.Retrofit;
 
 public class ListenerServiceFromWear extends WearableListenerService {
 
-    GoogleApiClient googleApiClient;
+    private GoogleApiClient googleApiClient;
 
     @Override
     public void onMessageReceived(final MessageEvent messageEvent) {
@@ -50,7 +50,9 @@ public class ListenerServiceFromWear extends WearableListenerService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        googleApiClient.disconnect();
+        if (googleApiClient!=null && googleApiClient.isConnected()) {
+            googleApiClient.disconnect();
+        }
     }
 
     private void processMessageEvent(final MessageEvent messageEvent) {
