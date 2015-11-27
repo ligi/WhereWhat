@@ -42,6 +42,7 @@
         </activity>
 
         <activity android:name=".ui.MapsActivity" />
+        <activity android:name=".ui.FeatureDetailsActivity" />
 
     </application>
 

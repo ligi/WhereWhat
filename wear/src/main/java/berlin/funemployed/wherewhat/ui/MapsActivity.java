@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -38,6 +39,8 @@ import com.google.android.gms.wearable.Wearable;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 
+import org.ligi.axt.AXT;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +67,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         markerToElementMap.clear();
         userContext.currentSelectedElement = null;
         mGoogleApiClient.connect();
+        buttonContainer.setVisibility(View.GONE);
     }
 
     @Override
@@ -80,6 +84,9 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
     @Bind(R.id.map_container)
     FrameLayout mapFrameLayout;
 
+    @Bind(R.id.button_container)
+    ViewGroup buttonContainer;
+
     private GoogleApiClient mGoogleApiClient;
 
     @OnClick(R.id.navigate_to_button)
@@ -95,8 +102,10 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         }
     }
 
-    @Bind(R.id.navigate_to_button)
-    View navigateToButton;
+    @OnClick(R.id.info_button)
+    void showInfo() {
+        AXT.at(this).startCommonIntent().activityFromClass(FeatureDetailsActivity.class);
+    }
 
     @Inject
     UserContext userContext;
@@ -247,7 +256,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
             @Override
             public boolean onMarkerClick(Marker marker) {
                 userContext.currentSelectedElement = markerToElementMap.get(marker);
-                navigateToButton.setVisibility(View.VISIBLE);
+                buttonContainer.setVisibility(View.VISIBLE);
                 return false;
             }
         });
@@ -269,8 +278,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         String path = messageEvent.getPath();
         if (path.equals(Constants.OVERPASS_RESPONSE_SUCCESS_PATH)) {
             onOverpassResponseSuccess(messageEvent);
-        }
-        else if (path.equals(Constants.OVERPASS_RESPONSE_FAILURE_PATH)) {
+        } else if (path.equals(Constants.OVERPASS_RESPONSE_FAILURE_PATH)) {
             onOverpassResponseFailure();
         }
     }

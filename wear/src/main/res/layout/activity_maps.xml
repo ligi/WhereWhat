@@ -35,11 +35,26 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
-    <Button
-        android:id="@+id/navigate_to_button"
+    <LinearLayout
+        android:id="@+id/button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="Navigate" />
+        android:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/navigate_to_button"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_navigation" />
+
+        <ImageButton
+            android:id="@+id/info_button"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_action_info" />
+
+    </LinearLayout>
 </LinearLayout>
 

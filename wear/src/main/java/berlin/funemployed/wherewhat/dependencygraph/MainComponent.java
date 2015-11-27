@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import berlin.funemployed.wherewhat.ui.FeatureAdapter;
 import berlin.funemployed.wherewhat.ui.FeatureViewHolder;
 import berlin.funemployed.wherewhat.ui.MapsActivity;
+import berlin.funemployed.wherewhat.ui.FeatureDetailsActivity;
 import dagger.Component;
 
 
@@ -17,4 +18,6 @@ public interface MainComponent {
     void inject(FeatureViewHolder featureViewHolder);
 
     void inject(MapsActivity mapsActivity);
+
+    void inject(FeatureDetailsActivity featureDetailsActivity);
 }
