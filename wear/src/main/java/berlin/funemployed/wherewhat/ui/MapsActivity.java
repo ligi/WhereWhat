@@ -24,7 +24,9 @@ import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -39,6 +41,7 @@ import butterknife.OnClick;
 import info.metadude.java.library.overpass.ApiModule;
 import info.metadude.java.library.overpass.models.Element;
 import info.metadude.java.library.overpass.models.OverpassResponse;
+import info.metadude.java.library.overpass.utils.DataQuery;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -147,6 +150,13 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         mMap = googleMap;
         mMap.setOnMapLongClickListener(this);
 
+        final String tagValue = userContext.currentFeatureType.osm_tag;
+        Map<String, String> tags =  new HashMap<String, String>() {
+            {
+                put("amenity", tagValue);
+            }
+        };
+        DataQuery dataQuery = new DataQuery(3600, 52.516667, 13.383333, tags, true, 13);
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
         List<Interceptor> interceptors = new ArrayList<>(1);
@@ -155,7 +165,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         }
         final Call<OverpassResponse> overpassResponse = ApiModule
                 .provideOverpassService(interceptors)
-                .getOverpassResponse("[out:json];node(around:3600,52.516667,13.383333)[\"amenity\"=\"" + userContext.currentFeatureType.osm_tag+"\"];out;");
+                .getOverpassResponse(dataQuery.getFormattedDataQuery());
         overpassResponse.enqueue(new Callback<OverpassResponse>() {
             @Override
             public void onResponse(Response<OverpassResponse> response, Retrofit retrofit) {
