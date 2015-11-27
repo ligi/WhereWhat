@@ -3,6 +3,9 @@ package berlin.funemployed.wherewhat;
 import org.junit.Test;
 
 import java.util.HashMap;
+
+import berlin.funemployed.wherewhat.util.TitleFromTagExtractor;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 

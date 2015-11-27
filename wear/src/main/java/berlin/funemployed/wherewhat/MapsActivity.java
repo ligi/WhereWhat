@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
+import berlin.funemployed.wherewhat.util.TitleFromTagExtractor;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

@@ -1,4 +1,4 @@
-package berlin.funemployed.wherewhat;
+package berlin.funemployed.wherewhat.util;
 
 import java.util.ArrayList;
 import java.util.Map;
