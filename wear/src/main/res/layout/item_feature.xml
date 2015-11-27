@@ -12,6 +12,7 @@
     <ImageView
         android:id="@+id/icon"
         android:src="@drawable/ic_action_bus"
+        android:padding="8dp"
         android:layout_width="64dp"
         android:layout_height="64dp" />
 
