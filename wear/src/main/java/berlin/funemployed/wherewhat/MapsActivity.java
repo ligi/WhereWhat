@@ -122,7 +122,6 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        // Display the dismiss overlay with a button to exit this activity.
-        mDismissOverlay.show();
+        finish();
     }
 }
