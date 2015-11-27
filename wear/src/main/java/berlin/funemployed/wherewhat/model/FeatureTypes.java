@@ -13,7 +13,7 @@ public class FeatureTypes {
                 add(new FeatureType("WIFI",R.drawable.ic_action_wifi,R.string.wifi));
 
                 add(new FeatureType("library",R.drawable.ic_action_book,R.string.library));
-                add(new FeatureType("coffee",R.drawable.ic_action_book,R.string.coffee));
+                add(new FeatureType("coffee",R.drawable.ic_action_coffee,R.string.coffee));
 
                 add(new FeatureType("cinema",R.drawable.ic_action_movie,R.string.cinema));
 
