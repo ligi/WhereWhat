@@ -34,3 +34,5 @@
 # Licence 
 
 GPLv3
+
+[![Build Status](https://snap-ci.com/ligi/WhereWhat/branch/master/build_image)](https://snap-ci.com/ligi/WhereWhat/branch/master)
