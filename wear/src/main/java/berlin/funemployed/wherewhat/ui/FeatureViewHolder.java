@@ -1,4 +1,4 @@
-package berlin.funemployed.wherewhat;
+package berlin.funemployed.wherewhat.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import org.ligi.axt.AXT;
 
+import berlin.funemployed.wherewhat.R;
 import berlin.funemployed.wherewhat.model.FeatureType;
 import butterknife.Bind;
 import butterknife.ButterKnife;

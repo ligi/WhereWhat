@@ -1,4 +1,4 @@
-package berlin.funemployed.wherewhat;
+package berlin.funemployed.wherewhat.ui;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
+import berlin.funemployed.wherewhat.R;
 import berlin.funemployed.wherewhat.util.TitleFromTagExtractor;
 import butterknife.Bind;
 import butterknife.ButterKnife;

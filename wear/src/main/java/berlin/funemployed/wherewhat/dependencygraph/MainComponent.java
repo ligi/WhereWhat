@@ -2,7 +2,7 @@ package berlin.funemployed.wherewhat.dependencygraph;
 
 import javax.inject.Singleton;
 
-import berlin.funemployed.wherewhat.FeatureAdapter;
+import berlin.funemployed.wherewhat.ui.FeatureAdapter;
 import dagger.Component;
 
 

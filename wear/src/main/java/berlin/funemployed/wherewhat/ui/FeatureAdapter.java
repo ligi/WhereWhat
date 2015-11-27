@@ -1,4 +1,4 @@
-package berlin.funemployed.wherewhat;
+package berlin.funemployed.wherewhat.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
+import berlin.funemployed.wherewhat.App;
+import berlin.funemployed.wherewhat.R;
 import berlin.funemployed.wherewhat.model.FeatureTypes;
 
 public class FeatureAdapter extends RecyclerView.Adapter<FeatureViewHolder> {

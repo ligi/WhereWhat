@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
 
     android:orientation="horizontal"
-    tools:context="berlin.funemployed.wherewhat.MapsActivity">
+    tools:context=".ui.MapsActivity">
 
     <ImageView
         android:id="@+id/icon"

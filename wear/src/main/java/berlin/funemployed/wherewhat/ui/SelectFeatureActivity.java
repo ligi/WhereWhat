@@ -1,10 +1,11 @@
-package berlin.funemployed.wherewhat;
+package berlin.funemployed.wherewhat.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import berlin.funemployed.wherewhat.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
