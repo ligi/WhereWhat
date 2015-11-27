@@ -3,6 +3,8 @@ package berlin.funemployed.wherewhat.dependencygraph;
 import javax.inject.Singleton;
 
 import berlin.funemployed.wherewhat.ui.FeatureAdapter;
+import berlin.funemployed.wherewhat.ui.FeatureViewHolder;
+import berlin.funemployed.wherewhat.ui.MapsActivity;
 import dagger.Component;
 
 
@@ -11,4 +13,8 @@ import dagger.Component;
 public interface MainComponent {
 
     void inject(FeatureAdapter featureAdapter);
+
+    void inject(FeatureViewHolder featureViewHolder);
+
+    void inject(MapsActivity mapsActivity);
 }

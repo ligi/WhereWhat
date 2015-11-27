@@ -3,6 +3,7 @@ package berlin.funemployed.wherewhat.dependencygraph;
 import javax.inject.Singleton;
 
 import berlin.funemployed.wherewhat.model.FeatureTypes;
+import berlin.funemployed.wherewhat.model.UserContext;
 import dagger.Module;
 import dagger.Provides;
 
@@ -13,5 +14,12 @@ public class MainModule {
     @Singleton
     public FeatureTypes provideFeatures() {
         return new FeatureTypes();
+    }
+
+
+    @Provides
+    @Singleton
+    public UserContext provideUserContext() {
+        return new UserContext();
     }
 }

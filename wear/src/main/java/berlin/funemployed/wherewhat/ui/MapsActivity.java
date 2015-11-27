@@ -22,7 +22,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import berlin.funemployed.wherewhat.App;
 import berlin.funemployed.wherewhat.R;
+import berlin.funemployed.wherewhat.model.UserContext;
 import berlin.funemployed.wherewhat.util.TitleFromTagExtractor;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -59,12 +63,17 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
     @Bind(R.id.navigate_to_button)
     View navigateToButton;
 
-    Marker currentSelectedMarker;
-    private DismissOverlayView mDismissOverlay;
+    @Inject
+    UserContext userContext;
+
+    private Marker currentSelectedMarker;
+
     private GoogleMap mMap;
 
     public void onCreate(Bundle savedState) {
         super.onCreate(savedState);
+
+        App.component().inject(this);
 
         setContentView(R.layout.activity_maps);
 
@@ -94,14 +103,18 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
     }
 
     private void handleMarkerGetFail() {
-        mDismissOverlay.setIntroText("no results found");
-        mDismissOverlay.show();
+        Toast.makeText(this,"no results found",Toast.LENGTH_LONG).show();
     }
 
     private void addMarkersFromResponse(Response<OverpassResponse> response) {
         final LatLngBounds.Builder latLngBuilder = LatLngBounds.builder();
 
         final List<Element> elements = response.body().elements;
+
+        if (elements.isEmpty()) {
+            Toast.makeText(this,"nothing found",Toast.LENGTH_LONG).show();
+            return;
+        }
         for (Element element : elements) {
             final LatLng pos = new LatLng(element.lat, element.lon);
             latLngBuilder.include(pos);
@@ -109,6 +122,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
             mMap.addMarker(new MarkerOptions().position(pos).title(fallback));
 
         }
+
         final LatLngBounds latLngBounds = latLngBuilder.build();
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 100));
@@ -128,7 +142,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         mMap = googleMap;
         mMap.setOnMapLongClickListener(this);
 
-        final Call<OverpassResponse> overpassResponse = ApiModule.provideOverpassService().getOverpassResponse("[out:json];node(around:600,52.516667,13.383333)[\"amenity\"=\"post_box\"];out;");
+        final Call<OverpassResponse> overpassResponse = ApiModule.provideOverpassService().getOverpassResponse("[out:json];node(around:3600,52.516667,13.383333)[\"amenity\"=\"" + userContext.currentFeatureType.osm_tag+"\"];out;");
 
         overpassResponse.enqueue(new Callback<OverpassResponse>() {
             @Override
