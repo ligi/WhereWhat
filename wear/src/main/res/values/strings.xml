@@ -9,4 +9,6 @@
     <string name="library">library</string>
     <string name="coffee">coffee</string>
     <string name="wifi">wifi</string>
+    <string name="bank">bank</string>
+    <string name="cinema">cinema</string>
 </resources>
