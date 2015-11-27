@@ -20,12 +20,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import berlin.funemployed.wherewhat.App;
+import berlin.funemployed.wherewhat.BuildConfig;
 import berlin.funemployed.wherewhat.R;
 import berlin.funemployed.wherewhat.model.UserContext;
 import berlin.funemployed.wherewhat.util.TitleFromTagExtractor;
@@ -143,8 +147,15 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         mMap = googleMap;
         mMap.setOnMapLongClickListener(this);
 
-        final Call<OverpassResponse> overpassResponse = ApiModule.provideOverpassService().getOverpassResponse("[out:json];node(around:3600,52.516667,13.383333)[\"amenity\"=\"" + userContext.currentFeatureType.osm_tag+"\"];out;");
-
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        List<Interceptor> interceptors = new ArrayList<>(1);
+        if (BuildConfig.DEBUG) {
+            interceptors.add(httpLoggingInterceptor);
+        }
+        final Call<OverpassResponse> overpassResponse = ApiModule
+                .provideOverpassService(interceptors)
+                .getOverpassResponse("[out:json];node(around:3600,52.516667,13.383333)[\"amenity\"=\"" + userContext.currentFeatureType.osm_tag+"\"];out;");
         overpassResponse.enqueue(new Callback<OverpassResponse>() {
             @Override
             public void onResponse(Response<OverpassResponse> response, Retrofit retrofit) {
