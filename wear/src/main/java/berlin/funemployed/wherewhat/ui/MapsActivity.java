@@ -3,6 +3,7 @@ package berlin.funemployed.wherewhat.ui;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +16,11 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResolvingResultCallbacks;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -50,7 +55,7 @@ import info.metadude.java.library.overpass.models.Element;
 import info.metadude.java.library.overpass.utils.DataQuery;
 
 public class MapsActivity extends Activity implements OnMapReadyCallback,
-        GoogleMap.OnMapLongClickListener, MessageApi.MessageListener {
+        GoogleMap.OnMapLongClickListener, MessageApi.MessageListener, LocationListener {
 
     @Override
     protected void onResume() {
@@ -132,7 +137,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(Bundle connectionHint) {
-                        requestFeatures();
+                        requestLocation();
                     }
 
                     @Override
@@ -148,11 +153,13 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
                 })
                 // Request access only to the Wearable API
                 .addApi(Wearable.API)
+                .addApi(LocationServices.API)
+
                 .build();
 
     }
 
-    private void requestFeatures() {
+    private void requestFeatures(final Location location) {
         Wearable.MessageApi.addListener(mGoogleApiClient, MapsActivity.this);
 
         final PendingResult<CapabilityApi.GetAllCapabilitiesResult> pendingCapabilityResult =
@@ -170,7 +177,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
 
                     for (Node node : stringCapabilityInfoEntry.getValue().getNodes()) {
                         Map<String, String> osmTags = userContext.currentFeatureType.osmTags;
-                        DataQuery dataQuery = new DataQuery(3600, 52.516667, 13.383333, osmTags, true, 15);
+                        DataQuery dataQuery = new DataQuery(3600, location.getLatitude(),location.getLongitude(),  osmTags, true, 15);
 
                         final PendingResult<MessageApi.SendMessageResult> sendMessageResultPendingResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), "/features", dataQuery.getFormattedDataQuery().getBytes());
 
@@ -260,5 +267,38 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
             e.printStackTrace();
         }
 
+    }
+
+    private void requestLocation() {
+        LocationRequest locationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(100)
+                .setFastestInterval(100);
+
+        LocationServices.FusedLocationApi
+                .requestLocationUpdates(mGoogleApiClient, locationRequest, this)
+                .setResultCallback(new ResultCallback<Status>() {
+
+                    @Override
+                    public void onResult(Status status) {
+                        if (status.getStatus().isSuccess()) {
+                            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                                Log.d(TAG, "Successfully requested location updates");
+                            }
+                        } else {
+                            Log.e(TAG,
+                                    "Failed in requesting location updates, "
+                                            + "status code: "
+                                            + status.getStatusCode()
+                                            + ", message: "
+                                            + status.getStatusMessage());
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        requestFeatures(location);
     }
 }
