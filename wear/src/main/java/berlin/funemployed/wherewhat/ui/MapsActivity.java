@@ -64,10 +64,10 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
     @Override
     protected void onResume() {
         super.onResume();
-        markerToElementMap.clear();
-        userContext.currentSelectedElement = null;
         mGoogleApiClient.connect();
-        buttonContainer.setVisibility(View.GONE);
+        if (userContext.currentSelectedElement == null ) {
+            buttonContainer.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -237,8 +237,9 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
             return;
         }
 
-        markerToElementMap.clear();
+        mMap.clear();
 
+        markerToElementMap.clear();
 
         for (Element element : elements) {
             final LatLng pos = new LatLng(element.lat, element.lon);
