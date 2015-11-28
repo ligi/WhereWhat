@@ -46,14 +46,16 @@
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_navigation" />
+            android:src="@drawable/ic_navigation"
+            android:contentDescription="@string/navigate" />
 
         <ImageButton
             android:id="@+id/info_button"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_action_info" />
+            android:src="@drawable/ic_action_info"
+            android:contentDescription="@string/info"/>
 
     </LinearLayout>
 </LinearLayout>

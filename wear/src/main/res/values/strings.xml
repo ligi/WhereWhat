@@ -11,4 +11,6 @@
     <string name="wifi">wifi</string>
     <string name="bank">bank</string>
     <string name="cinema">cinema</string>
+    <string name="info">info</string>
+    <string name="navigate">navigate</string>
 </resources>
