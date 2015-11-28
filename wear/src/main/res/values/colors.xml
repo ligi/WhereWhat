@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="feature_list_background">#FFA000</color>
+    <color name="feature_list_text">#4d362f</color>
+
+</resources>
