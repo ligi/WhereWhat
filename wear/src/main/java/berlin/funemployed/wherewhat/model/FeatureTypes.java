@@ -27,10 +27,12 @@ public class FeatureTypes {
                     put("public_transport", "platform");
                     put("bus", "yes");
                 }}, R.drawable.ic_action_bus, R.string.bus));
-                add(new FeatureType(new HashMap<String, String>() {{
+
+                /*add(new FeatureType(new HashMap<String, String>() {{
                     put("public_transport", "platform");
                     put("train", "yes");
                 }}, R.drawable.ic_action_train, R.string.train));
+                */
 
                 add(new FeatureType("waste_basket", R.drawable.ic_action_trash, R.string.trash));
                 add(new FeatureType("bank", R.drawable.ic_account_balance, R.string.bank));
