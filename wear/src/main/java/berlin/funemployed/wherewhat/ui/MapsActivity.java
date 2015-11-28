@@ -132,52 +132,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(Bundle connectionHint) {
-                        Log.d(TAG, "onConnected: " + connectionHint);
-                        // Now you can use the Data Layer API
-
-                        Wearable.MessageApi.addListener(mGoogleApiClient, MapsActivity.this);
-
-                        final PendingResult<CapabilityApi.GetAllCapabilitiesResult> pendingCapabilityResult =
-                                Wearable.CapabilityApi.getAllCapabilities(
-                                        mGoogleApiClient,
-                                        CapabilityApi.FILTER_REACHABLE);
-
-                        pendingCapabilityResult.setResultCallback(new ResolvingResultCallbacks<CapabilityApi.GetAllCapabilitiesResult>(MapsActivity.this, 100) {
-                            @Override
-                            public void onSuccess(CapabilityApi.GetAllCapabilitiesResult getAllCapabilitiesResult) {
-                                Log.d(TAG, "onCap: " + getAllCapabilitiesResult.getAllCapabilities().size());
-                                final Map<String, CapabilityInfo> allCapabilities = getAllCapabilitiesResult.getAllCapabilities();
-                                for (Map.Entry<String, CapabilityInfo> stringCapabilityInfoEntry : allCapabilities.entrySet()) {
-                                    Log.d(TAG, "onCap nodes: " + stringCapabilityInfoEntry.getKey() + "->" + stringCapabilityInfoEntry.getValue().getNodes().size());
-
-                                    for (Node node : stringCapabilityInfoEntry.getValue().getNodes()) {
-                                        Map<String, String> osmTags = userContext.currentFeatureType.osmTags;
-                                        DataQuery dataQuery = new DataQuery(3600, 52.516667, 13.383333, osmTags, true, 15);
-
-                                        final PendingResult<MessageApi.SendMessageResult> sendMessageResultPendingResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), "/features", dataQuery.getFormattedDataQuery().getBytes());
-
-                                        sendMessageResultPendingResult.setResultCallback(new ResolvingResultCallbacks<MessageApi.SendMessageResult>(MapsActivity.this, 1001) {
-                                            @Override
-                                            public void onSuccess(MessageApi.SendMessageResult sendMessageResult) {
-                                                Log.d(TAG, "onCap succ: " + sendMessageResult);
-                                            }
-
-                                            @Override
-                                            public void onUnresolvableFailure(Status status) {
-                                                Log.d(TAG, "onCap fail: " + status);
-                                            }
-                                        });
-
-                                    }
-                                }
-
-                            }
-
-                            @Override
-                            public void onUnresolvableFailure(Status status) {
-
-                            }
-                        });
+                        requestFeatures();
                     }
 
                     @Override
@@ -195,6 +150,52 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
                 .addApi(Wearable.API)
                 .build();
 
+    }
+
+    private void requestFeatures() {
+        Wearable.MessageApi.addListener(mGoogleApiClient, MapsActivity.this);
+
+        final PendingResult<CapabilityApi.GetAllCapabilitiesResult> pendingCapabilityResult =
+                Wearable.CapabilityApi.getAllCapabilities(
+                        mGoogleApiClient,
+                        CapabilityApi.FILTER_REACHABLE);
+
+        pendingCapabilityResult.setResultCallback(new ResolvingResultCallbacks<CapabilityApi.GetAllCapabilitiesResult>(MapsActivity.this, 100) {
+            @Override
+            public void onSuccess(CapabilityApi.GetAllCapabilitiesResult getAllCapabilitiesResult) {
+                Log.d(TAG, "onCap: " + getAllCapabilitiesResult.getAllCapabilities().size());
+                final Map<String, CapabilityInfo> allCapabilities = getAllCapabilitiesResult.getAllCapabilities();
+                for (Map.Entry<String, CapabilityInfo> stringCapabilityInfoEntry : allCapabilities.entrySet()) {
+                    Log.d(TAG, "onCap nodes: " + stringCapabilityInfoEntry.getKey() + "->" + stringCapabilityInfoEntry.getValue().getNodes().size());
+
+                    for (Node node : stringCapabilityInfoEntry.getValue().getNodes()) {
+                        Map<String, String> osmTags = userContext.currentFeatureType.osmTags;
+                        DataQuery dataQuery = new DataQuery(3600, 52.516667, 13.383333, osmTags, true, 15);
+
+                        final PendingResult<MessageApi.SendMessageResult> sendMessageResultPendingResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), "/features", dataQuery.getFormattedDataQuery().getBytes());
+
+                        sendMessageResultPendingResult.setResultCallback(new ResolvingResultCallbacks<MessageApi.SendMessageResult>(MapsActivity.this, 1001) {
+                            @Override
+                            public void onSuccess(MessageApi.SendMessageResult sendMessageResult) {
+                                Log.d(TAG, "onCap succ: " + sendMessageResult);
+                            }
+
+                            @Override
+                            public void onUnresolvableFailure(Status status) {
+                                Log.d(TAG, "onCap fail: " + status);
+                            }
+                        });
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onUnresolvableFailure(Status status) {
+
+            }
+        });
     }
 
     private void handleMarkerGetFail() {
