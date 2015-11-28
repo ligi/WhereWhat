@@ -9,13 +9,10 @@ public class App extends Application {
 
     private static MainComponent component;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        component =  DaggerMainComponent.create();
-    }
-
     public static MainComponent component() {
+        if (component == null) {
+            component = DaggerMainComponent.create();
+        }
         return component;
     }
 
