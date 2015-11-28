@@ -61,6 +61,8 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
     @Override
     protected void onResume() {
         super.onResume();
+        markerToElementMap.clear();
+        userContext.currentSelectedElement = null;
         mGoogleApiClient.connect();
     }
 
@@ -300,6 +302,10 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
 
     @Override
     public void onLocationChanged(Location location) {
-        requestFeatures(location);
+        if (markerToElementMap.isEmpty()) { // only once after location
+            requestFeatures(location);
+        }
     }
+
+
 }
