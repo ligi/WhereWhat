@@ -285,9 +285,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
                     @Override
                     public void onResult(Status status) {
                         if (status.getStatus().isSuccess()) {
-                            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                                Log.d(TAG, "Successfully requested location updates");
-                            }
+                            Log.d(TAG, "Successfully requested location updates");
                         } else {
                             Log.e(TAG,
                                     "Failed in requesting location updates, "
