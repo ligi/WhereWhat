@@ -266,6 +266,16 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
+        String path = messageEvent.getPath();
+        if (path.equals(Constants.OVERPASS_RESPONSE_SUCCESS_PATH)) {
+            onOverpassResponseSuccess(messageEvent);
+        }
+        else if (path.equals(Constants.OVERPASS_RESPONSE_FAILURE_PATH)) {
+            onOverpassResponseFailure();
+        }
+    }
+
+    private void onOverpassResponseSuccess(MessageEvent messageEvent) {
         final String jsonResponse = new String(messageEvent.getData());
 
         final Moshi moshi = new Moshi.Builder().build();
@@ -277,7 +287,10 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    private void onOverpassResponseFailure() {
+        // TODO UI should show that request failed
     }
 
     private void requestLocation() {
