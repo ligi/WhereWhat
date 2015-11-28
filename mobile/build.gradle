@@ -47,7 +47,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.3.0'
     compile 'com.android.support:design:23.1.1'
 
-    compile 'com.github.johnjohndoe:Overpass:9af4e6d5f97ec824f88166e58dfc890d633cf0e3'
+    compile 'com.github.johnjohndoe:Overpass:9c00793ab0b5af0692143662d51d8cee4bf7e628'
 
     compile 'org.ligi:AXT:0.35'
 

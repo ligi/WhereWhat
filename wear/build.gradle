@@ -39,7 +39,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-wearable:8.3.0'
     compile 'com.google.android.gms:play-services-maps:8.3.0'
 
-    compile 'com.github.johnjohndoe:Overpass:2ee1603696f5346abe05d8ec3cb2261bfa4ac423'
+    compile 'com.github.johnjohndoe:Overpass:9c00793ab0b5af0692143662d51d8cee4bf7e628'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.okhttp:logging-interceptor:2.6.0'
 
