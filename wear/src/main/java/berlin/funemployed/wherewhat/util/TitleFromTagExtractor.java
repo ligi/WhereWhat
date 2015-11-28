@@ -7,6 +7,7 @@ public class TitleFromTagExtractor {
 
     private final static ArrayList<String> keys = new ArrayList<String>() {
         {
+            add("name");
             add("collection_times");
             add("ref");
             add("amenity");
