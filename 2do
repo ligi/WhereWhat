@@ -1,8 +1,6 @@
-- real gps pos
 - sort by most used
 - when launching map toast with distance to closest feature
 - offset bottom/top recyclerview
 - start loading features before map is ready
 - directly navigate to closest one
 - auto-follow
-- configuration for featuretypes
