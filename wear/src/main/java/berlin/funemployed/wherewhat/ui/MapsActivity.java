@@ -331,9 +331,9 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
     @Override
     public void onLocationChanged(Location location) {
         final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
-        mMap.setMyLocationEnabled(true);
         if (markerToElementMap.isEmpty()) { // only once after location
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f));
+            mMap.setMyLocationEnabled(true);
             requestFeatures(location);
         }
     }
