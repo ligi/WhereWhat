@@ -3,6 +3,8 @@ package berlin.funemployed.wherewhat.ui;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -42,10 +44,21 @@ public class FeatureDetailsActivity extends Activity {
             return;
         }
 
+        final LayoutInflater layoutInflater = LayoutInflater.from(this);
+
+
         for (Map.Entry<String, String> stringStringEntry : currentSelectedElement.tags.entrySet()) {
-            final TextView child = new TextView(this);
-            child.setText(stringStringEntry.getKey() + " : " + stringStringEntry.getValue());
-            container.addView(child);
+
+            final View itemView = layoutInflater.inflate(R.layout.item_detail, container, false);
+
+            final TextView keyTextView = (TextView) itemView.findViewById(R.id.key);
+            final TextView valueTextView = (TextView) itemView.findViewById(R.id.value);
+
+            keyTextView.setText(stringStringEntry.getKey());
+            valueTextView.setText(stringStringEntry.getValue());
+
+            container.addView(itemView);
+
         }
     }
 
