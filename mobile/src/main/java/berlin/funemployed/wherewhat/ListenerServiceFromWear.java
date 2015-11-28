@@ -1,6 +1,7 @@
 package berlin.funemployed.wherewhat;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageEvent;
@@ -57,6 +58,11 @@ public class ListenerServiceFromWear extends WearableListenerService {
     }
 
     private void processMessageEvent(final MessageEvent messageEvent) {
+        String path = messageEvent.getPath();
+        if (!path.equals(Constants.OVERPASS_REQUEST_FEATURES_PATH)) {
+            Log.e(getClass().getName(), "Message event with unknown path: " + path);
+            return;
+        }
 
         final String requestString = new String(messageEvent.getData());
 
