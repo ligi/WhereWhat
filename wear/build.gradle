@@ -45,6 +45,8 @@ dependencies {
 
     compile 'org.ligi:AXT:0.35'
 
+    compile project(':shared')
+
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
     testCompile 'junit:junit:4.12'

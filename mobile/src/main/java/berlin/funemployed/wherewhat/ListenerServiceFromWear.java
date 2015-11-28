@@ -11,6 +11,7 @@ import com.squareup.moshi.Moshi;
 
 import java.util.List;
 
+import berlin.funemployed.wherewhat.common.Constants;
 import info.metadude.java.library.overpass.ApiModule;
 import info.metadude.java.library.overpass.models.OverpassResponse;
 import retrofit.Callback;
@@ -66,12 +67,12 @@ public class ListenerServiceFromWear extends WearableListenerService {
                 Moshi moshi = new Moshi.Builder().build();
                 final JsonAdapter<List> adapter = moshi.adapter(List.class);
                 final String jsonResponse = adapter.toJson(response.body().elements);
-                Wearable.MessageApi.sendMessage(googleApiClient, messageEvent.getSourceNodeId(), "/success", jsonResponse.getBytes());
+                Wearable.MessageApi.sendMessage(googleApiClient, messageEvent.getSourceNodeId(), Constants.OVERPASS_RESPONSE_SUCCESS_PATH, jsonResponse.getBytes());
             }
 
             @Override
             public void onFailure(Throwable t) {
-                Wearable.MessageApi.sendMessage(googleApiClient, messageEvent.getSourceNodeId(), "/fail", null);
+                Wearable.MessageApi.sendMessage(googleApiClient, messageEvent.getSourceNodeId(), Constants.OVERPASS_RESPONSE_FAILURE_PATH, null);
             }
         });
     }

@@ -46,6 +46,7 @@ import javax.inject.Inject;
 
 import berlin.funemployed.wherewhat.App;
 import berlin.funemployed.wherewhat.R;
+import berlin.funemployed.wherewhat.common.Constants;
 import berlin.funemployed.wherewhat.model.UserContext;
 import berlin.funemployed.wherewhat.util.TitleFromTagExtractor;
 import butterknife.Bind;
@@ -177,7 +178,7 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
 
                     for (Node node : stringCapabilityInfoEntry.getValue().getNodes()) {
                         Map<String, String> osmTags = userContext.currentFeatureType.osmTags;
-                        DataQuery dataQuery = new DataQuery(3600, location.getLatitude(),location.getLongitude(),  osmTags, true, 15);
+                        DataQuery dataQuery = new DataQuery(3600, location.getLatitude(),location.getLongitude(), osmTags, true, Constants.MAX_RESPONSE_COUNT);
 
                         final PendingResult<MessageApi.SendMessageResult> sendMessageResultPendingResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), "/features", dataQuery.getFormattedDataQuery().getBytes());
 

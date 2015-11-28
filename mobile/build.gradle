@@ -50,4 +50,6 @@ dependencies {
     compile 'com.github.johnjohndoe:Overpass:9af4e6d5f97ec824f88166e58dfc890d633cf0e3'
 
     compile 'org.ligi:AXT:0.35'
+
+    compile project(':shared')
 }
