@@ -178,11 +178,19 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
                 for (Map.Entry<String, CapabilityInfo> stringCapabilityInfoEntry : allCapabilities.entrySet()) {
                     Log.d(TAG, "onCap nodes: " + stringCapabilityInfoEntry.getKey() + "->" + stringCapabilityInfoEntry.getValue().getNodes().size());
 
+                    Map<String, String> osmTags = userContext.currentFeatureType.osmTags;
+                    DataQuery dataQuery = new DataQuery(
+                            Constants.LOCATION_RADIUS,
+                            location.getLatitude(),
+                            location.getLongitude(),
+                            osmTags,
+                            true,
+                            Constants.MAX_RESPONSE_COUNT
+                    );
+                    byte[] dataQueryBytes = dataQuery.getFormattedDataQuery().getBytes();
                     for (Node node : stringCapabilityInfoEntry.getValue().getNodes()) {
-                        Map<String, String> osmTags = userContext.currentFeatureType.osmTags;
-                        DataQuery dataQuery = new DataQuery(Constants.LOCATION_RADIUS, location.getLatitude(),location.getLongitude(), osmTags, true, Constants.MAX_RESPONSE_COUNT);
 
-                        final PendingResult<MessageApi.SendMessageResult> sendMessageResultPendingResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), Constants.OVERPASS_REQUEST_FEATURES_PATH, dataQuery.getFormattedDataQuery().getBytes());
+                        final PendingResult<MessageApi.SendMessageResult> sendMessageResultPendingResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), Constants.OVERPASS_REQUEST_FEATURES_PATH, dataQueryBytes);
 
                         sendMessageResultPendingResult.setResultCallback(new ResolvingResultCallbacks<MessageApi.SendMessageResult>(MapsActivity.this, 1001) {
                             @Override
