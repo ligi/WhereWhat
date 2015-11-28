@@ -180,9 +180,9 @@ public class MapsActivity extends Activity implements OnMapReadyCallback,
 
                     for (Node node : stringCapabilityInfoEntry.getValue().getNodes()) {
                         Map<String, String> osmTags = userContext.currentFeatureType.osmTags;
-                        DataQuery dataQuery = new DataQuery(3600, location.getLatitude(),location.getLongitude(), osmTags, true, Constants.MAX_RESPONSE_COUNT);
+                        DataQuery dataQuery = new DataQuery(Constants.LOCATION_RADIUS, location.getLatitude(),location.getLongitude(), osmTags, true, Constants.MAX_RESPONSE_COUNT);
 
-                        final PendingResult<MessageApi.SendMessageResult> sendMessageResultPendingResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), "/features", dataQuery.getFormattedDataQuery().getBytes());
+                        final PendingResult<MessageApi.SendMessageResult> sendMessageResultPendingResult = Wearable.MessageApi.sendMessage(mGoogleApiClient, node.getId(), Constants.OVERPASS_REQUEST_FEATURES_PATH, dataQuery.getFormattedDataQuery().getBytes());
 
                         sendMessageResultPendingResult.setResultCallback(new ResolvingResultCallbacks<MessageApi.SendMessageResult>(MapsActivity.this, 1001) {
                             @Override
